@@ -1,0 +1,665 @@
+/* Download Page Styles */
+.download-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.download-container {
+  max-width: 800px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Loading State */
+.loading-container {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-spinner {
+  font-size: 3rem;
+  animation: spin 2s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Header */
+.download-header {
+  margin-bottom: 40px;
+}
+
+.download-header h1 {
+  font-size: 2.5rem;
+  color: #1e3c72;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+.download-header p {
+  font-size: 1.2rem;
+  color: #666;
+  margin: 0;
+}
+
+/* Result Section */
+.result-section {
+  margin-bottom: 40px;
+}
+
+.result-image-container {
+  position: relative;
+  display: inline-block;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.result-image-container:hover {
+  transform: scale(1.02);
+}
+
+.result-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  max-height: 500px;
+}
+
+.image-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+  color: white;
+  padding: 30px 20px 20px;
+  text-align: center;
+}
+
+.overlay-content h3 {
+  font-size: 1.5rem;
+  margin: 0 0 5px 0;
+  font-weight: 700;
+}
+
+.overlay-content p {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+.download-button, .share-button {
+  padding: 15px 30px;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 200px;
+  justify-content: center;
+}
+
+.download-button.primary {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  box-shadow: 0 8px 20px rgba(30, 60, 114, 0.3);
+}
+
+.download-button.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(30, 60, 114, 0.4);
+}
+
+.share-button {
+  background: linear-gradient(135deg, #28a745, #20c997);
+  color: white;
+  box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+}
+
+.share-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 25px rgba(40, 167, 69, 0.4);
+}
+
+/* Additional Options */
+.additional-options {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.create-new-button, .home-button {
+  padding: 12px 25px;
+  border: 2px solid #1e3c72;
+  background: transparent;
+  color: #1e3c72;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.create-new-button:hover, .home-button:hover {
+  background: #1e3c72;
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* Features Highlight */
+.features-highlight {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.features-highlight h3 {
+  color: #1e3c72;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 15px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature-item:hover {
+  transform: translateY(-3px);
+}
+
+.feature-icon {
+  font-size: 1.5rem;
+}
+
+.feature-item span:last-child {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+}
+
+/* Social Proof */
+.social-proof {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  border-radius: 15px;
+  padding: 30px;
+  margin-bottom: 20px;
+}
+
+.social-proof p {
+  font-size: 1.1rem;
+  margin-bottom: 25px;
+  opacity: 0.95;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 20px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #ffd700;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+/* Responsive Design */
+/* Large tablets and small desktops */
+@media (max-width: 1024px) {
+  .download-container {
+    padding: 35px;
+  }
+  
+  .download-header h1 {
+    font-size: 2.3rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+  
+  .stats {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+  .download-page {
+    padding: 15px;
+  }
+  
+  .download-container {
+    padding: 25px;
+  }
+  
+  .download-header {
+    margin-bottom: 30px;
+  }
+  
+  .download-header h1 {
+    font-size: 2rem;
+  }
+  
+  .download-header p {
+    font-size: 1rem;
+  }
+  
+  .result-section {
+    margin-bottom: 30px;
+  }
+  
+  .result-image {
+    max-height: 400px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .download-button, .share-button {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 25px;
+    font-size: 1rem;
+  }
+  
+  .additional-options {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .create-new-button, .home-button {
+    width: 100%;
+    max-width: 250px;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+  }
+  
+  .features-highlight {
+    padding: 25px;
+  }
+  
+  .features-highlight h3 {
+    font-size: 1.3rem;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .feature-item {
+    padding: 12px;
+  }
+  
+  .feature-icon {
+    font-size: 1.3rem;
+  }
+  
+  .feature-item span:last-child {
+    font-size: 0.85rem;
+  }
+  
+  .social-proof {
+    padding: 25px;
+  }
+  
+  .social-proof p {
+    font-size: 1rem;
+  }
+  
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  
+  .stat-number {
+    font-size: 1.5rem;
+  }
+  
+  .stat-label {
+    font-size: 0.85rem;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  .download-page {
+    padding: 10px;
+  }
+  
+  .download-container {
+    padding: 20px;
+  }
+  
+  .download-header {
+    margin-bottom: 25px;
+  }
+  
+  .download-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .download-header p {
+    font-size: 0.95rem;
+  }
+  
+  .result-section {
+    margin-bottom: 25px;
+  }
+  
+  .result-image {
+    max-height: 350px;
+  }
+  
+  .image-overlay {
+    padding: 20px 15px 15px;
+  }
+  
+  .overlay-content h3 {
+    font-size: 1.3rem;
+  }
+  
+  .overlay-content p {
+    font-size: 0.9rem;
+  }
+  
+  .action-buttons {
+    gap: 12px;
+  }
+  
+  .download-button, .share-button {
+    padding: 12px 20px;
+    font-size: 0.95rem;
+    min-width: 180px;
+  }
+  
+  .additional-options {
+    gap: 10px;
+  }
+  
+  .create-new-button, .home-button {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    max-width: 220px;
+  }
+  
+  .features-highlight {
+    padding: 20px;
+  }
+  
+  .features-highlight h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+  
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .feature-item {
+    padding: 12px;
+  }
+  
+  .feature-icon {
+    font-size: 1.2rem;
+  }
+  
+  .feature-item span:last-child {
+    font-size: 0.8rem;
+  }
+  
+  .social-proof {
+    padding: 20px;
+  }
+  
+  .social-proof p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+  
+  .stats {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .stat {
+    gap: 3px;
+  }
+  
+  .stat-number {
+    font-size: 1.3rem;
+  }
+  
+  .stat-label {
+    font-size: 0.8rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+  .download-page {
+    padding: 8px;
+  }
+  
+  .download-container {
+    padding: 15px;
+  }
+  
+  .download-header h1 {
+    font-size: 1.6rem;
+  }
+  
+  .download-header p {
+    font-size: 0.9rem;
+  }
+  
+  .result-image {
+    max-height: 300px;
+  }
+  
+  .image-overlay {
+    padding: 15px 12px 12px;
+  }
+  
+  .overlay-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .overlay-content p {
+    font-size: 0.85rem;
+  }
+  
+  .download-button, .share-button {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+    min-width: 160px;
+  }
+  
+  .create-new-button, .home-button {
+    padding: 8px 15px;
+    font-size: 0.85rem;
+    max-width: 200px;
+  }
+  
+  .features-highlight {
+    padding: 15px;
+  }
+  
+  .features-highlight h3 {
+    font-size: 1.1rem;
+  }
+  
+  .feature-item {
+    padding: 10px;
+  }
+  
+  .feature-icon {
+    font-size: 1.1rem;
+  }
+  
+  .feature-item span:last-child {
+    font-size: 0.75rem;
+  }
+  
+  .social-proof {
+    padding: 15px;
+  }
+  
+  .social-proof p {
+    font-size: 0.9rem;
+  }
+  
+  .stat-number {
+    font-size: 1.2rem;
+  }
+  
+  .stat-label {
+    font-size: 0.75rem;
+  }
+}
+
+/* Landscape mobile orientation */
+@media (max-width: 768px) and (orientation: landscape) {
+  .download-page {
+    padding: 8px;
+  }
+  
+  .download-container {
+    padding: 20px;
+  }
+  
+  .download-header h1 {
+    font-size: 1.8rem;
+  }
+  
+  .result-image {
+    max-height: 250px;
+  }
+  
+  .action-buttons {
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .download-button, .share-button {
+    flex: 1;
+    max-width: 200px;
+  }
+  
+  .additional-options {
+    flex-direction: row;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .create-new-button, .home-button {
+    flex: 1;
+    max-width: 150px;
+  }
+  
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .result-image-container:hover {
+    transform: none;
+  }
+  
+  .download-button.primary:hover,
+  .share-button:hover,
+  .create-new-button:hover,
+  .home-button:hover {
+    transform: none;
+  }
+  
+  .feature-item:hover {
+    transform: none;
+  }
+}
