@@ -14,9 +14,7 @@ COPY backend/ .
 # Expose port
 EXPOSE 5000
 
-# Add health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:5000/', (res) => { process.exit(res.statusCode === 200 ? 0 : 1) })"
+# No health check - let Railway handle it
 
 # Start the application
 CMD ["npm", "start"]

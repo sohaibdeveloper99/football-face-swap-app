@@ -741,29 +741,12 @@ app.use('*', (req, res) => {
 });
 
 // Start server
-const server = app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Face Swap API server running on port ${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🔒 API endpoints secured and rate limited`);
   console.log(`🌍 Server listening on all interfaces (0.0.0.0)`);
   console.log(`🔑 FACEMINT_API_KEY configured: ${!!process.env.FACEMINT_API_KEY}`);
-});
-
-// Handle graceful shutdown
-process.on('SIGTERM', () => {
-  console.log('SIGTERM received, shutting down gracefully');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
-});
-
-process.on('SIGINT', () => {
-  console.log('SIGINT received, shutting down gracefully');
-  server.close(() => {
-    console.log('Server closed');
-    process.exit(0);
-  });
 });
 
 module.exports = app;
