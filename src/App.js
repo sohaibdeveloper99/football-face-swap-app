@@ -280,9 +280,10 @@ function App() {
               <a href="/face-swap" className="hero-button primary">
                 🎯 Advanced Face Swap Studio
               </a>
-              <a href="#upload-section" className="hero-button secondary">
+              {/* Hidden: Quick Face Swap link */}
+              {false && <a href="#upload-section" className="hero-button secondary">
                 ⚽ Quick Face Swap
-              </a>
+              </a>}
             </div>
           </div>
           <div className="hero-image">
@@ -297,7 +298,8 @@ function App() {
 
       {/* Main App Section */}
       <main className="app-main">
-        <div id="upload-section" className="upload-section mobile-hidden">
+        {/* Hidden: Football Fantasy Section */}
+        {false && <div id="upload-section" className="upload-section mobile-hidden">
           <div className="section-header">
             <h2>🚀 Create Your Football Fantasy</h2>
             <p>Upload your photo and a team jersey image to see yourself as a football star!</p>
@@ -440,7 +442,7 @@ function App() {
               </p>
             </div>
           )}
-        </div>
+        </div>}
 
         {error && (
           <div className="alert error">

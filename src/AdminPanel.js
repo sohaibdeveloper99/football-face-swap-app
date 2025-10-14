@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import './AdminPanel.css';
 
+// API Configuration
+const API_CONFIG = {
+  baseURL: 'https://football-face-swap-app.vercel.app',
+  endpoints: {
+    adminLogin: '/api/admin/login',
+    adminDashboard: '/api/admin/dashboard'
+  }
+};
+
 const AdminPanel = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [username, setUsername] = useState('');
@@ -15,7 +24,7 @@ const AdminPanel = () => {
     setError('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/admin/login', {
+      const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.adminLogin}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,7 +49,7 @@ const AdminPanel = () => {
 
   const loadDashboardData = async (token) => {
     try {
-      const response = await fetch('http://localhost:5000/api/admin/dashboard', {
+      const response = await fetch(`${API_CONFIG.baseURL}${API_CONFIG.endpoints.adminDashboard}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
