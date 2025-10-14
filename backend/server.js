@@ -25,7 +25,11 @@ app.use('/uploads', express.static(uploadsDir));
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: [
+    'http://localhost:3000',
+    'https://localhost:3000',
+    process.env.FRONTEND_URL
+  ].filter(Boolean),
   credentials: true
 }));
 
@@ -726,10 +730,12 @@ app.use('*', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Face Swap API server running on port ${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🔒 API endpoints secured and rate limited`);
+  console.log(`🌍 Server listening on all interfaces (0.0.0.0)`);
+  console.log(`🔑 FACEMINT_API_KEY configured: ${!!process.env.FACEMINT_API_KEY}`);
 });
 
 module.exports = app;
