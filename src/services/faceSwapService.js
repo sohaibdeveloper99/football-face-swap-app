@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const BACKEND_API = {
-  baseURL: 'https://football-face-swap-app-production-a188.up.railway.app',
+  baseURL: 'https://football-face-swap-app-production-3324.up.railway.app',
   // For local development, use: 'http://localhost:5000'
   endpoints: {
     faceswap: '/api/faceswap',
