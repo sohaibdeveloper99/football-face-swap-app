@@ -18,17 +18,22 @@ app.set('trust proxy', true);
 
 // Health check endpoint - MUST be BEFORE all middleware for Railway
 // This allows Railway to quickly verify the service is running
+// Simplified response for faster Railway health checks
 app.get('/api/health', (req, res) => {
-  res.json({ 
+  // Log health check requests (helps debug Railway issues)
+  console.log('💚 Health check accessed');
+  // Return immediately - Railway needs fast response
+  res.status(200).json({ 
     status: 'OK', 
-    message: 'Face Swap API is running',
-    timestamp: new Date().toISOString()
+    message: 'Face Swap API is running'
   });
 });
 
 // Root endpoint for Railway health checks (fallback)
+// Railway may check root endpoint if /api/health fails
 app.get('/', (req, res) => {
-  res.json({ 
+  console.log('💚 Root endpoint accessed');
+  res.status(200).json({ 
     status: 'OK', 
     message: 'Face Swap API Server',
     health: '/api/health'
@@ -759,11 +764,14 @@ app.use('*', (req, res) => {
 });
 
 // Start server
+// Railway requires listening on 0.0.0.0 and using process.env.PORT
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Face Swap API server running on port ${PORT}`);
   console.log(`📡 Health check: http://0.0.0.0:${PORT}/api/health`);
   console.log(`🔒 API endpoints secured and rate limited`);
   console.log(`✅ Server is ready and listening on all interfaces`);
+  console.log(`📍 Railway PORT env: ${process.env.PORT || 'not set'}`);
+  console.log(`🌐 Server bound to: 0.0.0.0:${PORT}`);
 });
 
 // Handle server errors
