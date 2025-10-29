@@ -16,28 +16,25 @@ const PORT = process.env.PORT || 5000;
 // This allows Express to trust X-Forwarded-* headers from the reverse proxy
 app.set('trust proxy', true);
 
-// Health check endpoint - MUST be BEFORE all middleware for Railway
-// This allows Railway to quickly verify the service is running
-// Simplified response for faster Railway health checks
-app.get('/api/health', (req, res) => {
-  // Log health check requests (helps debug Railway issues)
-  console.log('💚 Health check accessed');
-  // Return immediately - Railway needs fast response
-  res.status(200).json({ 
-    status: 'OK', 
-    message: 'Face Swap API is running'
-  });
+// HEALTH CHECK ENDPOINTS - Register BEFORE any middleware
+// Railway checks these to verify server is ready - must respond fast!
+
+// Primary health check (Railway default)
+app.get('/health', (req, res) => {
+  console.log('💚 /health endpoint accessed');
+  res.status(200).json({ status: 'OK' });
 });
 
-// Root endpoint for Railway health checks (fallback)
-// Railway may check root endpoint if /api/health fails
+// Alternative health check path
+app.get('/api/health', (req, res) => {
+  console.log('💚 /api/health endpoint accessed');
+  res.status(200).json({ status: 'OK', message: 'Face Swap API is running' });
+});
+
+// Root endpoint (some platforms check this)
 app.get('/', (req, res) => {
-  console.log('💚 Root endpoint accessed');
-  res.status(200).json({ 
-    status: 'OK', 
-    message: 'Face Swap API Server',
-    health: '/api/health'
-  });
+  console.log('💚 Root / endpoint accessed');
+  res.status(200).json({ status: 'OK', message: 'Face Swap API Server' });
 });
 
 // Create uploads directory if it doesn't exist
@@ -767,11 +764,15 @@ app.use('*', (req, res) => {
 // Railway requires listening on 0.0.0.0 and using process.env.PORT
 const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Face Swap API server running on port ${PORT}`);
-  console.log(`📡 Health check: http://0.0.0.0:${PORT}/api/health`);
+  console.log(`📡 Health checks available at:`);
+  console.log(`   - http://0.0.0.0:${PORT}/health`);
+  console.log(`   - http://0.0.0.0:${PORT}/api/health`);
+  console.log(`   - http://0.0.0.0:${PORT}/`);
   console.log(`🔒 API endpoints secured and rate limited`);
   console.log(`✅ Server is ready and listening on all interfaces`);
   console.log(`📍 Railway PORT env: ${process.env.PORT || 'not set'}`);
   console.log(`🌐 Server bound to: 0.0.0.0:${PORT}`);
+  console.log(`⏰ Server ready at: ${new Date().toISOString()}`);
 });
 
 // Handle server errors
