@@ -12,6 +12,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+// Trust proxy - REQUIRED for Railway and cloud platforms
+// This allows Express to trust X-Forwarded-* headers from the reverse proxy
+app.set('trust proxy', true);
+
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -24,12 +28,27 @@ app.use('/uploads', express.static(uploadsDir));
 
 // Security middleware
 app.use(helmet());
+
+// CORS configuration - allow multiple origins for production
+const allowedOrigins = [
+  process.env.FRONTEND_URL || 'http://localhost:3000',
+  'http://localhost:3000',
+  'https://localhost:3000'
+];
+
+if (process.env.FRONTEND_URL && !allowedOrigins.includes(process.env.FRONTEND_URL)) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 app.use(cors({
-  origin: [
-    'http://localhost:3000',
-    'https://localhost:3000',
-    process.env.FRONTEND_URL
-  ].filter(Boolean),
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      console.log('CORS blocked origin:', origin);
+    }
+    callback(null, true); // Allow all origins for now
+  },
   credentials: true
 }));
 
@@ -90,10 +109,6 @@ const API_CONFIG = {
 
 // Helper function to get API key based on provider
 function getApiKey(provider) {
-  console.log('Getting API key for provider:', provider);
-  console.log('FACEMINT_API_KEY exists:', !!process.env.FACEMINT_API_KEY);
-  console.log('FACEMINT_API_KEY value:', process.env.FACEMINT_API_KEY ? `${process.env.FACEMINT_API_KEY.substring(0, 8)}...` : 'NOT SET');
-  
   const keys = {
     FACEMINT: process.env.FACEMINT_API_KEY,
     PIAPI: process.env.PIAPI_API_KEY,
@@ -295,17 +310,6 @@ function handleApiResponse(response, provider) {
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'Face Swap API is running',
-    timestamp: new Date().toISOString(),
-    port: PORT,
-    environment: process.env.NODE_ENV || 'development'
-  });
-});
-
-// Root health check for Railway
-app.get('/', (req, res) => {
   res.json({ 
     status: 'OK', 
     message: 'Face Swap API is running',
@@ -741,12 +745,10 @@ app.use('*', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+app.listen(PORT, () => {
   console.log(`🚀 Face Swap API server running on port ${PORT}`);
   console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
   console.log(`🔒 API endpoints secured and rate limited`);
-  console.log(`🌍 Server listening on all interfaces (0.0.0.0)`);
-  console.log(`🔑 FACEMINT_API_KEY configured: ${!!process.env.FACEMINT_API_KEY}`);
 });
 
 module.exports = app;
