@@ -56,7 +56,11 @@ app.use(cors({
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // limit each IP to 10 requests per windowMs
-  message: 'Too many requests from this IP, please try again later.'
+  message: 'Too many requests from this IP, please try again later.',
+  // Disable trust proxy validation for Railway
+  validate: {
+    trustProxy: false
+  }
 });
 app.use('/api/faceswap', limiter);
 
