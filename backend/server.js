@@ -16,6 +16,25 @@ const PORT = process.env.PORT || 5000;
 // This allows Express to trust X-Forwarded-* headers from the reverse proxy
 app.set('trust proxy', true);
 
+// Health check endpoint - MUST be BEFORE all middleware for Railway
+// This allows Railway to quickly verify the service is running
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Face Swap API is running',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root endpoint for Railway health checks (fallback)
+app.get('/', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    message: 'Face Swap API Server',
+    health: '/api/health'
+  });
+});
+
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
 if (!fs.existsSync(uploadsDir)) {
@@ -311,15 +330,6 @@ function handleApiResponse(response, provider) {
       };
   }
 }
-
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    message: 'Face Swap API is running',
-    timestamp: new Date().toISOString()
-  });
-});
 
 // Facemint callback endpoint
 app.post('/api/facemint-callback', (req, res) => {
