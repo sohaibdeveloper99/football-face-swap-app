@@ -749,10 +749,26 @@ app.use('*', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Face Swap API server running on port ${PORT}`);
-  console.log(`📡 Health check: http://localhost:${PORT}/api/health`);
+  console.log(`📡 Health check: http://0.0.0.0:${PORT}/api/health`);
   console.log(`🔒 API endpoints secured and rate limited`);
+  console.log(`✅ Server is ready and listening on all interfaces`);
+});
+
+// Handle server errors
+server.on('error', (error) => {
+  console.error('❌ Server error:', error);
+  process.exit(1);
+});
+
+// Keep the process alive
+process.on('SIGTERM', () => {
+  console.log('⚠️ SIGTERM received, shutting down gracefully...');
+  server.close(() => {
+    console.log('✅ Server closed');
+    process.exit(0);
+  });
 });
 
 module.exports = app;
