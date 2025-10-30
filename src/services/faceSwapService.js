@@ -99,14 +99,14 @@ class FaceSwapService {
       }
 
     } catch (error) {
-      console.error('Face swap error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        response: error.response?.data,
+      const backendMsg = error?.response?.data?.error || error?.response?.data?.message;
+      const err = new Error(backendMsg || error.message || 'Face swap request failed');
+      console.error('Face swap error:', {
+        message: err.message,
         status: error.response?.status,
-        statusText: error.response?.statusText
+        data: error.response?.data
       });
-      throw error;
+      throw err;
     }
   }
 

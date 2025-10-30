@@ -1,0 +1,105 @@
+===================================================
+HOW TO DEPLOY BACKEND TO RAILWAY (LIVE ONLINE)
+===================================================
+
+WHAT YOU'LL GET:
+================
+✅ Backend accessible from anywhere (not just localhost)
+✅ Works 24/7 even when your computer is off
+✅ Gets a public URL like: https://your-app.up.railway.app
+✅ Free for small projects
+✅ Easy to setup (about 10 minutes)
+
+
+REQUIREMENTS:
+=============
+1. GitHub account (github.com) - FREE
+2. Railway account (railway.app) - FREE
+
+
+STEP-BY-STEP GUIDE:
+===================
+
+STEP 1: Push Code to GitHub
+---------------------------
+1. Go to github.com and create new repository
+2. In your project folder, run:
+   
+   git init
+   git add .
+   git commit -m "Ready for Railway"
+   git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+   git push -u origin main
+
+STEP 2: Deploy to Railway
+------------------------
+1. Go to railway.app
+2. Sign up with GitHub
+3. Click "New Project"
+4. Click "Deploy from GitHub repo"
+5. Select your repository
+6. Select "backend" folder
+7. Click "Deploy Now"
+
+STEP 3: Add Environment Variables
+----------------------------------
+In Railway dashboard:
+1. Go to "Variables" tab
+2. Add these:
+   
+   NODE_ENV=production
+   PORT=5000
+   FRONTEND_URL=YOUR_FRONTEND_URL
+   FACEMINT_API_KEY=your_key_from_config.env
+
+STEP 4: Get Your Live URL
+--------------------------
+1. In Railway, go to "Settings"
+2. Click "Generate Domain"
+3. Copy the URL (this is your live backend!)
+4. Test it: https://your-app.up.railway.app/api/health
+
+
+STEP 5: Update Frontend
+------------------------
+Change API calls from:
+   http://localhost:5000
+To:
+   https://your-app.up.railway.app
+
+
+CONFIGURE CORS (Important!)
+============================
+After deploying, you need to set CORS to allow your frontend.
+In Railway environment variables, set:
+   FRONTEND_URL=https://your-frontend-domain.com
+
+
+TROUBLESHOOTING:
+================
+Problem: Backend won't start
+Fix: Check logs in Railway dashboard, make sure all variables are set
+
+Problem: CORS errors
+Fix: Update FRONTEND_URL in Railway variables
+
+Problem: 404 errors
+Fix: Make sure you're using the correct API endpoints
+
+
+FREE TIER DETAILS:
+==================
+Railway gives you:
+- $5 free credit every month
+- Perfect for small projects
+- No credit card needed to start
+- Only pay if you use more than $5
+
+
+That's it! Your backend is now live! 🚀
+===================================================
+
+
+
+
+

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './ProductPage.css';
 import faceSwapService from './services/faceSwapService';
 import advancedFaceAlignmentService from './services/advancedFaceAlignmentService';
+import { normalizeImageFile } from './utils/fileNormalization';
+import { getJerseyImageUrl, getFaceImageUrl } from './utils/imageUtils';
 
 const ProductPage = () => {
   const [userImage, setUserImage] = useState(null);
@@ -11,6 +13,19 @@ const ProductPage = () => {
   const [success, setSuccess] = useState(null);
   const [selectedTeam, setSelectedTeam] = useState(null);
   const [faceDetectionResults, setFaceDetectionResults] = useState(null);
+  
+  // Fun loading messages
+  const loadingMessages = [
+    '⚽ Getting your jersey ready...',
+    '💫 Detecting your superstar face...',
+    '✨ AI is analyzing your features...',
+    '🎨 Blending colors like magic...',
+    '🚀 Creating your perfect jersey...',
+    '💎 Adding pro-level details...',
+    '🌟 Making you look legendary...',
+    '🎯 Almost there, champ!',
+    '🏆 Your masterpiece is ready!'
+  ];
 
   useEffect(() => {
     // Load selected team data from localStorage
@@ -21,20 +36,18 @@ const ProductPage = () => {
       // Default to Chelsea if no team selected
       setSelectedTeam({
         name: 'Chelsea',
-        jerseyImage: 'https://i.postimg.cc/nzGhQXGW/Chelsea.jpg',
-        faceImage: 'https://i.postimg.cc/V6WkbJWM/Chelsea-Man.png'
+        jerseyImage: getJerseyImageUrl('chelsea_home_jersey.jpg'),
+        faceImage: getFaceImageUrl('Chelsea.png')
       });
     }
   }, []);
 
-  const handleUserFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      // Validate file size (max 10MB)
-      if (file.size > 10 * 1024 * 1024) {
-        setError('Image size should be less than 10MB for best quality');
-        return;
-      }
+  const handleUserFileChange = async (e) => {
+    const original = e.target.files[0];
+    if (!original) return;
+    try {
+      // Normalize (reject HEIC, downscale large)
+      const file = await normalizeImageFile(original, { maxDimension: 2000, maxBytes: 8 * 1024 * 1024 });
 
       // Validate file type
       if (!file.type.startsWith('image/')) {
@@ -43,26 +56,25 @@ const ProductPage = () => {
       }
 
       const reader = new FileReader();
-      reader.onload = (e) => {
+      reader.onload = (ev) => {
         const img = new Image();
         img.onload = () => {
-          // Check image dimensions
           if (img.width < 200 || img.height < 200) {
             setError('Image should be at least 200x200 pixels for best results');
             return;
           }
-
-          setUserImage({
-            file: file,
-            preview: e.target.result,
-            width: img.width,
-            height: img.height
-          });
+          setUserImage({ file, preview: ev.target.result, width: img.width, height: img.height });
           setError(null);
         };
-        img.src = e.target.result;
+        img.src = ev.target.result;
       };
       reader.readAsDataURL(file);
+    } catch (err) {
+      if (err && err.code === 'UNSUPPORTED_HEIC') {
+        setError('iPhone HEIC detected. Please upload a JPG or PNG photo.');
+      } else {
+        setError('Could not read image. Please try a different photo.');
+      }
     }
   };
 
@@ -73,13 +85,17 @@ const ProductPage = () => {
     }
 
     setIsProcessing(true);
-    setProcessingMessage('Initializing face swap...');
+    setProcessingMessage(loadingMessages[0]);
     setError(null);
     setSuccess(null);
     setFaceDetectionResults(null);
 
+    // Declare messageInterval outside try block for cleanup
+    let messageInterval;
+
     try {
       // First, fetch the team's face image from the URL
+      setProcessingMessage('🔥 Prepping your jersey...');
       const teamFaceResponse = await fetch(selectedTeam.faceImage);
       const teamFaceBlob = await teamFaceResponse.blob();
       
@@ -88,21 +104,58 @@ const ProductPage = () => {
         type: teamFaceBlob.type || 'image/jpeg'
       });
 
-      // Use advanced face detection and alignment with backend processing
-      setProcessingMessage('Detecting faces and extracting landmarks...');
+      // Dynamic loading messages - change faster and more frequently
+      let messageIndex = 1;
       
-      // Update progress messages during processing
+      const startDynamicMessages = () => {
+        messageInterval = setInterval(() => {
+          if (isProcessing && messageIndex < loadingMessages.length) {
+            setProcessingMessage(loadingMessages[messageIndex]);
+            messageIndex++;
+          } else if (messageIndex >= loadingMessages.length) {
+            messageIndex = 0; // Loop back
+          }
+        }, 1000); // Changed from 1500ms to 1000ms for faster changes
+      };
+      
+      startDynamicMessages();
+      
+      // Update to specific cool messages at certain points
       setTimeout(() => {
-        if (isProcessing) setProcessingMessage('Aligning faces and scaling to match...');
+        if (isProcessing) {
+          setProcessingMessage('⚽ Magic happening in 3... 2... 1...');
+        }
       }, 2000);
       
       setTimeout(() => {
-        if (isProcessing) setProcessingMessage('Normalizing lighting and color matching...');
+        if (isProcessing) {
+          setProcessingMessage('💫 Your face is about to get upgraded...');
+        }
       }, 4000);
       
       setTimeout(() => {
-        if (isProcessing) setProcessingMessage('Sending aligned and normalized images to backend...');
+        if (isProcessing) {
+          setProcessingMessage('🎨 AI is working its magic on your features...');
+        }
       }, 6000);
+      
+      setTimeout(() => {
+        if (isProcessing) {
+          setProcessingMessage('🚀 Polishing every pixel to perfection...');
+        }
+      }, 8000);
+      
+      setTimeout(() => {
+        if (isProcessing) {
+          setProcessingMessage('💎 Almost ready to blow your mind...');
+        }
+      }, 10000);
+      
+      setTimeout(() => {
+        if (isProcessing) {
+          setProcessingMessage('🏆 Final touch - making you legendary...');
+        }
+      }, 12000);
       
       const result = await advancedFaceAlignmentService.performFaceSwap(
         teamFaceFile,
@@ -113,18 +166,14 @@ const ProductPage = () => {
       if (result.success) {
         // Save the swapped image to localStorage and redirect to download page
         localStorage.setItem('swappedImage', result.swappedImage);
-        setFaceDetectionResults(result.processingInfo);
-        setSuccess(`Face swap completed successfully! Detected ${result.processingInfo.jerseyFacesDetected} face(s) in jersey and ${result.processingInfo.userFacesDetected} face(s) in your photo. Faces aligned, lighting/color normalized, and sent to backend for processing.`);
         
-        // Redirect to download page after a short delay
-        setTimeout(() => {
-          window.location.href = '/download';
-        }, 2000);
+        // Redirect to download page immediately
+        window.location.href = '/download';
       } else {
         console.log('Advanced face swap failed, trying fallback method...');
         
-        // Fallback to basic face swap service
-        setProcessingMessage('Using fallback face swap method...');
+        // Fallback to basic face swap method
+        setProcessingMessage('🔄 Switching to turbo mode for epic results...');
         
         const fallbackResult = await faceSwapService.swapFaces(
           teamFaceFile,
@@ -147,12 +196,9 @@ const ProductPage = () => {
           }
           
           localStorage.setItem('swappedImage', swappedImageData);
-          setSuccess('Face swap completed successfully using fallback method!');
           
-          // Redirect to download page after a short delay
-          setTimeout(() => {
-            window.location.href = '/download';
-          }, 2000);
+          // Redirect to download page immediately
+          window.location.href = '/download';
         } else {
           throw new Error('Both advanced and fallback face swap methods failed');
         }
@@ -162,6 +208,10 @@ const ProductPage = () => {
       setError(err.message || 'Failed to process face swap. Please try again.');
       console.error('Face swap error:', err);
     } finally {
+      // Clean up any intervals
+      if (typeof messageInterval !== 'undefined') {
+        clearInterval(messageInterval);
+      }
       setIsProcessing(false);
       setProcessingMessage('');
     }
@@ -175,12 +225,19 @@ const ProductPage = () => {
 
   return (
     <div className="product-page">
+      {/* Back to Home Button */}
+      <div className="back-to-home">
+        <button onClick={() => window.location.href = '/'} className="home-button">
+          ← Back to Home
+        </button>
+      </div>
+
       <div className="product-container">
         {/* Left Side - Product Image */}
         <div className="product-image-section">
           <div className="product-image">
             <img 
-              src={selectedTeam?.jerseyImage || "https://i.postimg.cc/nzGhQXGW/Chelsea.jpg"} 
+              src={selectedTeam?.jerseyImage || getJerseyImageUrl('chelsea_home_jersey.jpg')} 
               alt={`${selectedTeam?.name || 'Chelsea'} Football Jersey`} 
             />
           </div>
@@ -194,6 +251,7 @@ const ProductPage = () => {
         <div className="upload-section">
           <div className="upload-header">
             <h3>Upload Your Face</h3>
+            <p><strong>For best quality:</strong> Use high-resolution images (800x800+ pixels), clear and well-lit face looking straight at the camera. Max file size: 10MB.</p>
           </div>
 
           <div className="upload-area">
@@ -230,10 +288,28 @@ const ProductPage = () => {
               className="swap-button"
             >
               {isProcessing ? (
-                <>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center', width: '100%' }}>
                   <span className="spinning">⚽</span>
-                  {processingMessage || 'Creating Your Football Fantasy...'}
-                </>
+                  <div className="processing-message animated-text" style={{ fontSize: '0.9rem', fontWeight: '600' }}>
+                    {processingMessage || 'Creating Your Football Fantasy...'}
+                  </div>
+                  <div style={{ 
+                    width: '80%', 
+                    height: '4px', 
+                    background: 'rgba(255,255,255,0.3)', 
+                    borderRadius: '10px',
+                    overflow: 'hidden',
+                    marginTop: '0.5rem'
+                  }}>
+                    <div style={{
+                      height: '100%',
+                      background: 'linear-gradient(90deg, #fff, #ff6b6b, #fff)',
+                      backgroundSize: '200% 100%',
+                      animation: 'loadingBar 1.5s ease-in-out infinite',
+                      borderRadius: '10px'
+                    }}></div>
+                  </div>
+                </div>
               ) : (
                 <>
                   <span>⚽</span>
@@ -258,45 +334,7 @@ const ProductPage = () => {
             </div>
           )}
 
-          {success && (
-            <div className="alert success">
-              <span>✅</span>
-              <span>{success}</span>
-            </div>
-          )}
-
-          {faceDetectionResults && (
-            <div className="face-detection-results">
-              <h4>🎯 Face Detection Results</h4>
-              <div className="results-grid">
-                <div className="result-item">
-                  <span className="result-label">Jersey Faces:</span>
-                  <span className="result-value">{faceDetectionResults.jerseyFacesDetected}</span>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Your Faces:</span>
-                  <span className="result-value">{faceDetectionResults.userFacesDetected}</span>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Faces Aligned:</span>
-                  <span className="result-value">{faceDetectionResults.facesAligned}</span>
-                </div>
-                <div className="result-item">
-                  <span className="result-label">Processing:</span>
-                  <span className="result-value">{faceDetectionResults.backendProcessing ? 'Backend' : 'Client'}</span>
-                </div>
-              </div>
-            </div>
-          )}
-
         </div>
-      </div>
-
-      {/* Back to Home Button */}
-      <div className="back-to-home">
-        <button onClick={() => window.location.href = '/'} className="home-button">
-          ← Back to Home
-        </button>
       </div>
     </div>
   );

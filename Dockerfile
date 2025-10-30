@@ -2,19 +2,17 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy backend package files
-COPY backend/package*.json ./
+# Copy package files
+COPY package*.json ./
 
 # Install dependencies
 RUN npm ci --only=production
 
-# Copy backend source code
-COPY backend/ .
+# Copy source code
+COPY . .
 
 # Expose port
 EXPOSE 5000
-
-# No health check - let Railway handle it
 
 # Start the application
 CMD ["npm", "start"]

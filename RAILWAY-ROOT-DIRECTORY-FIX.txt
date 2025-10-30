@@ -1,0 +1,100 @@
+==========================================
+FIX RAILWAY DEPLOYMENT - FIXED!
+==========================================
+
+THE PROBLEM:
+- Railway is looking in the wrong folder
+- It's trying to run from the ROOT directory
+- But your backend code is in the "backend/" subfolder
+
+THE SOLUTION:
+You MUST set the "Root Directory" in Railway dashboard!
+
+
+STEP-BY-STEP INSTRUCTIONS:
+==========================================
+
+1. GO TO RAILWAY DASHBOARD
+   https://railway.app
+
+2. CLICK YOUR PROJECT
+   football-face-swap-app
+
+3. CLICK YOUR BACKEND SERVICE
+   (football-face-swap-app-production)
+
+4. CLICK "Settings" TAB
+   (or look for a gear icon)
+
+5. FIND "Root Directory" FIELD
+   Currently it's probably empty or has "/"
+
+6. CHANGE IT TO:
+   backend
+
+7. CLICK "Save" BUTTON
+
+8. WAIT 2-3 MINUTES
+   Railway will automatically redeploy!
+
+
+WHAT YOU'LL SEE AFTER:
+==========================================
+Logs will show:
+✓ Building backend...
+✓ Installing dependencies...
+✓ Starting server...
+✅ Face Swap API server running on port 5000
+
+
+TEST IT:
+==========================================
+Visit:
+https://football-face-swap-app-production-fb73.up.railway.app/api/health
+
+You should see:
+{"status":"OK","message":"Face Swap API is running"}
+
+
+WHY THIS WORKS:
+==========================================
+
+BEFORE (Broken):
+Railway looks at: footballswaptry/ (root)
+Tries to find: server.js
+Can't find it! ❌
+
+AFTER (Fixed):
+Railway looks at: footballswaptry/backend/ (backend folder)
+Finds: server.js ✅
+Starts successfully! 🎉
+
+
+NEED HELP FINDING THE SETTING?
+==========================================
+
+If you can't find "Root Directory" setting:
+
+OPTION A: Delete and Recreate
+1. Delete current service
+2. Click "New" → "GitHub"
+3. Select your repo
+4. When asked for "Root Directory", type: backend
+5. Deploy
+
+OPTION B: Look for these names:
+- Root Directory
+- Root
+- Working Directory
+- Source Path
+
+Any of these can be used!
+
+
+GO SET IT NOW! ⚡
+==========================================
+
+
+
+
+

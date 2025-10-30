@@ -89,20 +89,32 @@
 .upload-header {
   text-align: center;
   margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .upload-header h3 {
   font-size: 1.8rem;
   font-weight: 700;
   color: #333;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  display: block !important;
+  width: 100% !important;
+  text-align: center;
 }
 
 .upload-header p {
   color: #666;
-  font-size: 1rem;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: 100%;
+  display: block !important;
+  width: 100% !important;
+  margin-top: 0 !important;
+  padding: 0 1rem;
+  text-align: center;
 }
-
 
 .upload-area {
   border: 3px dashed #ddd;
@@ -287,6 +299,81 @@
   }
 }
 
+/* Pulsing Animation for Processing Messages */
+.processing-message {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Loading Progress Container */
+.loading-progress {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f2ff 100%);
+  border: 2px solid #D1152C;
+  box-shadow: 0 4px 15px rgba(209, 21, 44, 0.2);
+}
+
+.loading-progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(209, 21, 44, 0.1),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* Animated Text */
+.animated-text {
+  display: inline-block;
+  animation: textPulse 2s ease-in-out infinite;
+}
+
+@keyframes textPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Loading Bar Animation */
+@keyframes loadingBar {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
 /* Alert Styles */
 .alert {
   display: flex;
@@ -442,10 +529,17 @@
   
   .upload-header h3 {
     font-size: 1.6rem;
+    display: block;
+    width: 100%;
   }
   
   .upload-header p {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0;
   }
   
   .upload-area {
@@ -576,10 +670,17 @@
   
   .upload-header h3 {
     font-size: 1.4rem;
+    display: block;
+    width: 100%;
   }
   
   .upload-header p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    display: block;
+    width: 100%;
+    margin-top: 0.75rem;
+    padding: 0;
   }
   
   .upload-area {
@@ -665,10 +766,17 @@
   
   .upload-header h3 {
     font-size: 1.3rem;
+    display: block;
+    width: 100%;
   }
   
   .upload-header p {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
+    line-height: 1.4;
+    display: block;
+    width: 100%;
+    margin-top: 0.625rem;
+    padding: 0;
   }
   
   .upload-area {

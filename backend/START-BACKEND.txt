@@ -1,0 +1,46 @@
+==========================================
+HOW TO START YOUR BACKEND AUTOMATICALLY
+==========================================
+
+STEP 1: Run the Setup (ONE TIME ONLY)
+---------------------------------------
+1. Open your backend folder
+2. Double-click: setup-backend-always-on.bat
+3. Wait for it to finish
+4. DONE!
+
+After this, your backend will ALWAYS be running.
+
+STEP 2: Check if it's working
+---------------------------------------
+Open browser and go to:
+http://localhost:5000/api/health
+
+You should see: {"status":"OK"}
+
+
+WHAT HAPPENS NOW:
+=================
+✅ Backend starts automatically when Windows boots
+✅ Backend keeps running even if you close terminal
+✅ Backend auto-restarts if it crashes
+✅ You NEVER need to run "npm start" again!
+
+
+NEED TO START/STOP MANUALLY?
+=============================
+Open PowerShell in backend folder and run:
+
+Start:   npm run pm2:start
+Stop:    npm run pm2:stop  
+Restart: npm run pm2:restart
+Logs:    npm run pm2:logs
+
+
+THAT'S IT! YOUR BACKEND IS NOW ALWAYS ON! 🚀
+===========================================
+
+
+
+
+

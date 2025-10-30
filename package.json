@@ -15,6 +15,7 @@
     "@testing-library/user-event": "^13.5.0",
     "autoprefixer": "^10.4.21",
     "face-api.js": "^0.22.2",
+    "firebase": "^12.4.0",
     "konva": "^8.4.3",
     "postcss": "^8.5.6",
     "react": "^18.3.1",
@@ -28,7 +29,9 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "firebase:deploy": "npm run build && firebase deploy",
+    "firebase:serve": "npm run build && firebase serve"
   },
   "eslintConfig": {
     "extends": [
