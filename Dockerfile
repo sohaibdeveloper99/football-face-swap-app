@@ -1,18 +1,20 @@
 FROM node:18-alpine
 
-WORKDIR /app
+# Create app directory
+WORKDIR /app/backend
 
-# Copy package files
-COPY package*.json ./
-
-# Install dependencies
+# Install backend dependencies first (leverages Docker layer caching)
+COPY backend/package*.json ./
 RUN npm ci --only=production
 
-# Copy source code
-COPY . .
+# Copy only the backend source code
+COPY backend/ ./
 
-# Expose port
+# Environment
+ENV NODE_ENV=production
+
+# Expose backend port
 EXPOSE 5000
 
-# Start the application
+# Start the backend server
 CMD ["npm", "start"]
