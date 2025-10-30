@@ -68,18 +68,8 @@ const FacePage = () => {
   };
 
   const handleFaceUpload = async (event) => {
-    const original = event.target.files[0];
-    if (original) {
-      let file = original;
-      try {
-        const { normalizeImageFile } = require('./utils/fileNormalization');
-        file = await normalizeImageFile(original, { maxDimension: 2000, maxBytes: 8 * 1024 * 1024 });
-      } catch (err) {
-        if (err && err.code === 'UNSUPPORTED_HEIC') {
-          alert('iPhone HEIC detected. Please upload a JPG or PNG photo.');
-          return;
-        }
-      }
+    const file = event.target.files[0];
+    if (file) {
       console.log('Face file selected:', file.name, file.type, file.size);
       
       // Validate file type

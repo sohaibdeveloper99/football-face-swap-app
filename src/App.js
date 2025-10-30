@@ -98,30 +98,17 @@ function App() {
 
   const handleFileSelect = (file, type) => {
     try {
-      // Lazy import to avoid circulars if any
-      // eslint-disable-next-line global-require
-      const { normalizeImageFile } = require('./utils/fileNormalization');
-      normalizeImageFile(file, { maxDimension: 2000, maxBytes: 8 * 1024 * 1024 })
-        .then((normalized) => {
-          try { faceSwapService.validateImage(normalized); } catch {}
-          const reader = new FileReader();
-          reader.onload = () => {
-            if (type === 'target') {
-              setTargetImage({ file: normalized, preview: reader.result });
-            } else {
-              setSourceImage({ file: normalized, preview: reader.result });
-            }
-            setError(null);
-          };
-          reader.readAsDataURL(normalized);
-        })
-        .catch((err) => {
-          if (err && err.code === 'UNSUPPORTED_HEIC') {
-            setError('iPhone HEIC detected. Please upload a JPG or PNG photo.');
-          } else {
-            setError('Could not read image. Please try a different photo.');
-          }
-        });
+      faceSwapService.validateImage(file);
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (type === 'target') {
+          setTargetImage({ file, preview: reader.result });
+        } else {
+          setSourceImage({ file, preview: reader.result });
+        }
+        setError(null);
+      };
+      reader.readAsDataURL(file);
     } catch (err) {
       setError(err.message);
     }

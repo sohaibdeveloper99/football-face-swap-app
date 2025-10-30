@@ -2,7 +2,7 @@
 import axios from 'axios';
 
 const BACKEND_API = {
-  baseURL: 'https://football-face-swap-app-production-fb73.up.railway.app',
+  baseURL: 'https://football-face-swap-app-production-3324.up.railway.app',
   // For local development, use: 'http://localhost:5000'
   endpoints: {
     faceswap: '/api/faceswap',
@@ -99,14 +99,14 @@ class FaceSwapService {
       }
 
     } catch (error) {
-      const backendMsg = error?.response?.data?.error || error?.response?.data?.message;
-      const err = new Error(backendMsg || error.message || 'Face swap request failed');
-      console.error('Face swap error:', {
-        message: err.message,
+      console.error('Face swap error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        response: error.response?.data,
         status: error.response?.status,
-        data: error.response?.data
+        statusText: error.response?.statusText
       });
-      throw err;
+      throw error;
     }
   }
 

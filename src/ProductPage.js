@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './ProductPage.css';
 import faceSwapService from './services/faceSwapService';
 import advancedFaceAlignmentService from './services/advancedFaceAlignmentService';
-import { normalizeImageFile } from './utils/fileNormalization';
 import { getJerseyImageUrl, getFaceImageUrl } from './utils/imageUtils';
 
 const ProductPage = () => {
@@ -42,12 +41,14 @@ const ProductPage = () => {
     }
   }, []);
 
-  const handleUserFileChange = async (e) => {
-    const original = e.target.files[0];
-    if (!original) return;
-    try {
-      // Normalize (reject HEIC, downscale large)
-      const file = await normalizeImageFile(original, { maxDimension: 2000, maxBytes: 8 * 1024 * 1024 });
+  const handleUserFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Validate file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        setError('Image size should be less than 10MB for best quality');
+        return;
+      }
 
       // Validate file type
       if (!file.type.startsWith('image/')) {
@@ -56,25 +57,26 @@ const ProductPage = () => {
       }
 
       const reader = new FileReader();
-      reader.onload = (ev) => {
+      reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
+          // Check image dimensions
           if (img.width < 200 || img.height < 200) {
             setError('Image should be at least 200x200 pixels for best results');
             return;
           }
-          setUserImage({ file, preview: ev.target.result, width: img.width, height: img.height });
+
+          setUserImage({
+            file: file,
+            preview: e.target.result,
+            width: img.width,
+            height: img.height
+          });
           setError(null);
         };
-        img.src = ev.target.result;
+        img.src = e.target.result;
       };
       reader.readAsDataURL(file);
-    } catch (err) {
-      if (err && err.code === 'UNSUPPORTED_HEIC') {
-        setError('iPhone HEIC detected. Please upload a JPG or PNG photo.');
-      } else {
-        setError('Could not read image. Please try a different photo.');
-      }
     }
   };
 

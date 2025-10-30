@@ -96,26 +96,14 @@ const upload = multer({
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB limit
   },
-  // Accept first, validate after upload using magic bytes (more reliable on mobile)
-  fileFilter: (_req, _file, cb) => cb(null, true)
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
+    }
+  }
 });
-
-// Lightweight magic-bytes detector for common image types
-function isLikelyImage(buffer) {
-  if (!buffer || buffer.length < 12) return false;
-  const b0 = buffer[0], b1 = buffer[1], b2 = buffer[2], b3 = buffer[3];
-  // JPEG FF D8 FF
-  if (b0 === 0xFF && b1 === 0xD8 && b2 === 0xFF) return true;
-  // PNG 89 50 4E 47
-  if (b0 === 0x89 && b1 === 0x50 && b2 === 0x4E && b3 === 0x47) return true;
-  // GIF 47 49 46 38
-  if (b0 === 0x47 && b1 === 0x49 && b2 === 0x46 && b3 === 0x38) return true;
-  // WEBP starts with RIFF and contains WEBP at 8
-  const riff = buffer.slice(0, 4).toString('ascii');
-  const webp = buffer.slice(8, 12).toString('ascii');
-  if (riff === 'RIFF' && webp === 'WEBP') return true;
-  return false;
-}
 
 // API Configuration
 const API_CONFIG = {
@@ -419,24 +407,6 @@ app.post('/api/faceswap', upload.fields([
       return res.status(400).json({
         success: false,
         error: 'Target image is required'
-      });
-    }
-
-    // Post-upload validation: ensure buffers are actually images (mobile may omit mimetype)
-    const srcBuf = req.files.source_image?.[0]?.buffer;
-    const tgtBuf = isChelseaProduct ? null : req.files.target_image?.[0]?.buffer;
-    const srcOk = isLikelyImage(srcBuf);
-    const tgtOk = isChelseaProduct ? true : isLikelyImage(tgtBuf);
-    if (!srcOk || !tgtOk) {
-      console.warn('Post-upload validation failed:', {
-        source_mime: req.files.source_image?.[0]?.mimetype,
-        source_name: req.files.source_image?.[0]?.originalname,
-        target_mime: req.files.target_image?.[0]?.mimetype,
-        target_name: req.files.target_image?.[0]?.originalname
-      });
-      return res.status(400).json({
-        success: false,
-        error: 'Please upload a valid image file (JPG, PNG, or WebP).'
       });
     }
 
