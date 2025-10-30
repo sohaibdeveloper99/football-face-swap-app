@@ -529,6 +529,8 @@ app.post('/api/faceswap', upload.fields([
             console.log(`Checking task status... (attempt ${attempts}/${maxAttempts})`);
             const statusResult = await checkFacemintTaskStatus(taskId, apiKey);
             
+            console.log('Status result:', JSON.stringify(statusResult, null, 2));
+            
             if (statusResult.code === 0 && statusResult.data) {
               const taskData = statusResult.data;
               console.log('Task state:', taskData.state);
@@ -567,11 +569,26 @@ app.post('/api/faceswap', upload.fields([
                   throw new Error('No result URL found in completed task');
                 }
               } else if (taskData.state === 4) { // Failed
-                throw new Error('Face swap task failed');
+                const errorMsg = taskData.error || taskData.message || 'Face swap task failed';
+                console.error('Task failed with state 4:', errorMsg);
+                throw new Error(`Face swap task failed: ${errorMsg}`);
               }
               // If state is 1 (pending) or 2 (processing), continue polling
+            } else if (statusResult.code === -1 || statusResult.code !== 0) {
+              // Handle error response from Facemint API
+              const errorMsg = statusResult.info || statusResult.message || `API returned code ${statusResult.code}`;
+              console.error(`Task status check failed. Code: ${statusResult.code}, Message: ${errorMsg}`);
+              
+              // If it's early in the process, might be temporary - continue polling
+              if (attempts < 5) {
+                console.log('Early attempt - continuing to poll despite error...');
+                continue;
+              }
+              
+              // After several attempts, throw error
+              throw new Error(`Failed to get task status: ${errorMsg}`);
             } else {
-              throw new Error('Failed to get task status');
+              throw new Error('Failed to get task status - invalid response format');
             }
           }
           
